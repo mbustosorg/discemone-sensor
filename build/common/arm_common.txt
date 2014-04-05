@@ -1,0 +1,14 @@
+BIN=/Applications/Development/Arduino/Arduino1.0.5.app/Contents/Resources/Java/hardware/tools/arm-none-eabi/bin
+CC=$(BIN)/arm-none-eabi-gcc
+CXX=$(BIN)/arm-none-eabi-g++
+AR=$(BIN)/arm-none-eabi-ar
+OBJCPY=$(BIN)/arm-none-eabi-objcopy
+MCU=-mcpu=cortex-m4
+CPU_SPEED=-DF_CPU=48000000
+CXXFLAGS=$(MCU) $(CPU_SPEED) -c -g -Os -Wall -fno-exceptions -ffunction-sections -fdata-sections -MMD -DUSB_VID=null -DUSB_PID=null -DARDUINO=105 -mthumb -nostdlib -D__MK20DX128__ -DUSB_SERIAL -DLAYOUT_US_ENGLISH -fno-rtti -felide-constructors -std=gnu++0x
+CFLAGS=-DTEENSY -DUSE_WS2801 -DFS_TOWER $(MCU) $(CPU_SPEED) -c -g -Os -Wall -fno-exceptions -ffunction-sections -fdata-sections -MMD -DUSB_VID=null -DUSB_PID=null -DARDUINO=102 -mthumb -nostdlib -D__MK20DX128__ -DUSB_SERIAL -DLAYOUT_US_ENGLISH
+LIBRARIES=/Applications/Development/Arduino/Arduino1.0.5.app/Contents/Resources/Java/libraries/
+CORES=/Applications/Development/Arduino/Arduino1.0.5.app/Contents/Resources/Java/hardware/teensy/cores/teensy3/
+INCLUDE=-I$(CORES) -I/Applications/Development/Arduino/Arduino1.0.5.app/Contents/Resources/Java/hardware/arduino/variants/standard -I$(LIBRARIES)XBee -I$(LIBRARIES)SPI -I$(LIBRARIES)TCL -I$(LIBRARIES)EEPROM -I$(LIBRARIES)adafruitLED -I$(LIBRARIES)Wire -I$(LIBRARIES)adafruitGFX -I$(LIBRARIES)adafruitOLED -I$(LIBRARIES)adafruitStrip -I$(LIBRARIES)TinyGPS
+BOARD=teensy
+LIBNAME=lib$(BOARD).a
