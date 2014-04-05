@@ -6,10 +6,10 @@ OBJECT_DIR=./
 
 DFLAGS=-DTEENSY
 
-APP_CPP_SOURCES=main.cpp discemoneSensor.cpp
+APP_CPP_SOURCES=main.cpp discemoneSensor.cpp SerialCommand.cpp
 APP_OBJECTS=$(addprefix $(OBJECT_DIR),$(APP_CPP_SOURCES:.cpp=.o))
 
-include $(PROJECT_LIB_LOC)/build/common/arm_common_dev.txt
+include $(PROJECT_LIB_LOC)/build/common/arm_common.txt
 
 default: build 
 
