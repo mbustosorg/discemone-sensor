@@ -6,8 +6,8 @@
 
 long lastTouchRead[22];
 uint8_t touchPins[] = {0, 1, 15, 16, 17, 18, 19, 22, 23};
-long TOUCH_THRESHOLD = 10;
-bool testing = false;
+long touchThreshold = 10;
+bool testing = true;
 
 SerialCommand SCmd;
 
@@ -17,6 +17,7 @@ void sendSensorData();
 void enableTestMode();
 void disableTestMode();
 void processThresholdRequest();
+void unrecognized();
 
 //! Setup system
 void setup()
@@ -24,6 +25,8 @@ void setup()
   SCmd.addCommand("TESTMODE", enableTestMode);
   SCmd.addCommand("PRODMODE", disableTestMode);
   SCmd.addCommand("THRSHLD", processThresholdRequest);
+  SCmd.addDefaultHandler(unrecognized);
+  pinMode(13, OUTPUT);
   Serial.begin(57600);
 }
 
@@ -34,6 +37,9 @@ void loop()
   SCmd.readSerial();
   if (testing) {
 	delay (1000);
+	digitalWrite(13, HIGH);
+	delay (10);
+	digitalWrite(13, LOW);
 	sendSensorData();
   } else {
 	// Read sensors and update if appropriate
@@ -52,6 +58,7 @@ void loop()
 void sendSensorData() {
   Serial.print ("SENSOR:");
   for (uint8_t i = 0; i < sizeof(touchPins); i++) {
+	if (i > 0) Serial.print("-");
 	Serial.print(lastTouchRead[i]);
   }
   Serial.println("");
@@ -59,9 +66,9 @@ void sendSensorData() {
 
 //! Have we detected a touch on pin `touchMe'?
 bool detectTouch (int touchMe) {
-  long touch = touchRead(touchMe);
+  long touch = touchRead(touchPins[touchMe]);
 
-  if (abs (lastTouchRead[touchMe] - touch) > TOUCH_THRESHOLD) {
+  if (abs (lastTouchRead[touchMe] - touch) > touchThreshold) {
 	lastTouchRead[touchMe] = touch;
 	return true;
   } else {
@@ -91,7 +98,13 @@ void processThresholdRequest() {
     aNumber=atoi(arg);
     Serial.print("THRSHLD:");
 	Serial.println(aNumber); 
+	touchThreshold = aNumber;
   } else {
     Serial.println("THRSHLD:???");
   }
+}
+
+// This gets set as the default handler, and gets called when no other command matches.
+void unrecognized() {
+  Serial.println("UNKNOWN_COMMAND");
 }
